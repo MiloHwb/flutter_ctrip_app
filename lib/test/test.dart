@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+
+import 'tabbed_app_bar_sample.dart';
+
+class TestApp extends StatelessWidget {
+  TestApp({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: <Widget>[
+          //顶部导航
+          FlatButton(
+            color: Colors.lightBlue,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return TabbedAppBarSample();
+              }));
+            },
+            child: Text(
+              '顶部导航',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          //底部导航
+          FlatButton(
+            color: Colors.lightBlue,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return TabbedAppBarSample();
+              }));
+            },
+            child: Text(
+              '底部导航',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
