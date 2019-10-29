@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'drawer_sample.dart';
 import 'tabbed_app_bar_sample.dart';
 
 class TestApp extends StatelessWidget {
@@ -28,11 +29,11 @@ class TestApp extends StatelessWidget {
             color: Colors.lightBlue,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return TabbedAppBarSample();
+                return DrawerSample();
               }));
             },
             child: Text(
-              '底部导航',
+              '侧拉菜单',
               style: TextStyle(color: Colors.white),
             ),
           ),
