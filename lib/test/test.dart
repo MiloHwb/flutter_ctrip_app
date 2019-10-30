@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'drawer_sample.dart';
+import 'future_builder_sample.dart';
 import 'tabbed_app_bar_sample.dart';
 
 class TestApp extends StatelessWidget {
@@ -34,6 +35,19 @@ class TestApp extends StatelessWidget {
             },
             child: Text(
               '侧拉菜单',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          //FutureBuilder
+          FlatButton(
+            color: Colors.lightBlue,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return FutureBuilderSample();
+              }));
+            },
+            child: Text(
+              'FutureBuilder',
               style: TextStyle(color: Colors.white),
             ),
           ),
