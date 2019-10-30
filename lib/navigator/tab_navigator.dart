@@ -22,6 +22,7 @@ class _TabNavigatorState extends State<TabNavigator> {
   @override
   void initState() {
     super.initState();
+    //显示第一个tab
     _controller = PageController(initialPage: 0);
   }
 
