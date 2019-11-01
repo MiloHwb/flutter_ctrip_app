@@ -5,6 +5,7 @@ import 'expandable_sample.dart';
 import 'future_builder_sample.dart';
 import 'grid_view_sample.dart';
 import 'h_list_view_sample.dart';
+import 'pull_load_more_sample.dart';
 import 'tabbed_app_bar_sample.dart';
 import 'v_list_view_sample.dart';
 
@@ -30,6 +31,9 @@ class TestApp extends StatelessWidget {
           buildButton(context, "可展开的列表", ExpandableSample()),
           //网格布局
           buildButton(context, "网格布局", GridViewSample()),
+          //下拉刷新与上拉加载更多
+          buildButton(context, "下拉刷新与上拉加载更多", PullLoadMoreSample()),
+
         ],
       ),
     );
