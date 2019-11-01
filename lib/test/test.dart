@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'drawer_sample.dart';
+import 'expandable_sample.dart';
 import 'future_builder_sample.dart';
 import 'h_list_view_sample.dart';
 import 'tabbed_app_bar_sample.dart';
@@ -24,6 +25,8 @@ class TestApp extends StatelessWidget {
           buildButton(context, '垂直滚动列表', VListViewSample()),
           //水平滚动列表
           buildButton(context, '水平滚动列表', HListViewSample()),
+          //可展开的列表
+          buildButton(context, "可展开的列表", ExpandableSample()),
         ],
       ),
     );
