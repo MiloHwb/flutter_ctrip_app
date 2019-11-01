@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'drawer_sample.dart';
 import 'expandable_sample.dart';
 import 'future_builder_sample.dart';
+import 'grid_view_sample.dart';
 import 'h_list_view_sample.dart';
 import 'tabbed_app_bar_sample.dart';
 import 'v_list_view_sample.dart';
@@ -27,6 +28,8 @@ class TestApp extends StatelessWidget {
           buildButton(context, '水平滚动列表', HListViewSample()),
           //可展开的列表
           buildButton(context, "可展开的列表", ExpandableSample()),
+          //网格布局
+          buildButton(context, "网格布局", GridViewSample()),
         ],
       ),
     );
