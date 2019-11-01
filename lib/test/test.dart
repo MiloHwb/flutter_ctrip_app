@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'drawer_sample.dart';
 import 'future_builder_sample.dart';
+import 'h_list_view_sample.dart';
 import 'tabbed_app_bar_sample.dart';
+import 'v_list_view_sample.dart';
 
 class TestApp extends StatelessWidget {
   TestApp({Key key}) : super(key: key);
@@ -13,45 +15,31 @@ class TestApp extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           //顶部导航
-          FlatButton(
-            color: Colors.lightBlue,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return TabbedAppBarSample();
-              }));
-            },
-            child: Text(
-              '顶部导航',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          //底部导航
-          FlatButton(
-            color: Colors.lightBlue,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return DrawerSample();
-              }));
-            },
-            child: Text(
-              '侧拉菜单',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          buildButton(context, '顶部导航', TabbedAppBarSample()),
+          //侧拉菜单
+          buildButton(context, '侧拉菜单', DrawerSample()),
           //FutureBuilder
-          FlatButton(
-            color: Colors.lightBlue,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return FutureBuilderSample();
-              }));
-            },
-            child: Text(
-              'FutureBuilder',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          buildButton(context, 'FutureBuilder', FutureBuilderSample()),
+          //垂直滚动列表
+          buildButton(context, '垂直滚动列表', VListViewSample()),
+          //水平滚动列表
+          buildButton(context, '水平滚动列表', HListViewSample()),
         ],
+      ),
+    );
+  }
+
+  FlatButton buildButton(BuildContext context, String title, Widget widget) {
+    return FlatButton(
+      color: Colors.lightBlue,
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return widget;
+        }));
+      },
+      child: Text(
+        title,
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
