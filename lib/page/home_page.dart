@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ctrip_app/dao/home_dao.dart';
+import 'package:flutter_ctrip_app/model/home_model.dart';
+import 'package:flutter_ctrip_app/widget/grid_nav.dart';
+import 'package:flutter_ctrip_app/widget/local_nav.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 const APPBAR_SCROLL_OFFSET = 80;
@@ -26,24 +29,24 @@ class _HomePageState extends State<HomePage> {
   double appBarAlpha = 0;
 
   String resultString = '';
+  HomeModel homeModel;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      print('_scrollController' + _scrollController.offset.toString());
       _onScroll(_scrollController.offset);
     });
     loadData();
   }
 
-  void _onScroll(offset) {
-    var tempAlpha = offset / APPBAR_SCROLL_OFFSET;
+  void _onScroll(double offset) {
+    double tempAlpha = offset / APPBAR_SCROLL_OFFSET;
     if (tempAlpha > 1) {
-      tempAlpha = 1;
+      tempAlpha = 1.0;
     }
     if (tempAlpha < 0) {
-      tempAlpha = 0;
+      tempAlpha = 0.0;
     }
     setState(() {
       appBarAlpha = tempAlpha;
@@ -54,6 +57,7 @@ class _HomePageState extends State<HomePage> {
     try {
       var homeModel = await HomeDao.fetch();
       setState(() {
+        this.homeModel = homeModel;
         resultString = json.encode(homeModel);
       });
     } catch (e) {
@@ -93,6 +97,7 @@ class _HomePageState extends State<HomePage> {
                 pagination: SwiperPagination(),
               ),
             ),
+            LocalNav(localNavList: this.homeModel == null ? [] : this.homeModel.localNavList),
             Container(
               height: 800,
               child: ListTile(
