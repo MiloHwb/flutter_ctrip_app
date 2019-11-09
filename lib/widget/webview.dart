@@ -8,6 +8,14 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
  * @ 创建时间     2019/11/6 21:51
  * @ 描述         
  */
+
+const List<String> CACHE_URLS = [
+  'm.ctrip.com/',
+  'm.ctrip.com/html5/',
+  'm.ctrip.com/html5',
+  'm.ctrip.com/webapp/you/'
+];
+
 class WebView extends StatefulWidget {
   final String url;
   final String statusBarColor;
@@ -28,6 +36,7 @@ class _WebViewState extends State<WebView> {
   StreamSubscription<String> _onUrlChanged;
   StreamSubscription<WebViewStateChanged> _onStateChanged;
   StreamSubscription<WebViewHttpError> _onHttpError;
+  bool isExit = false;
 
   @override
   void initState() {
@@ -35,8 +44,17 @@ class _WebViewState extends State<WebView> {
     webViewReference.close();
     _onUrlChanged = webViewReference.onUrlChanged.listen((String url) {});
     _onStateChanged = webViewReference.onStateChanged.listen((WebViewStateChanged state) {
+      print('state.url = ' + state.url);
       switch (state.type) {
         case WebViewState.shouldStart:
+          if (_isToMain(state.url)) {
+            if (widget.backForbid && !isExit) {
+              Navigator.of(context).pop();
+              isExit = true;
+            } else {
+              webViewReference.reloadUrl(widget.url);
+            }
+          }
           break;
         case WebViewState.startLoad:
           break;
@@ -49,6 +67,17 @@ class _WebViewState extends State<WebView> {
     _onHttpError = webViewReference.onHttpError.listen((WebViewHttpError httpError) {
       print(httpError);
     });
+  }
+
+  bool _isToMain(String url) {
+    bool contains = false;
+    for (var value in CACHE_URLS) {
+      if (url?.endsWith(value) ?? false) {
+        contains = true;
+        break;
+      }
+    }
+    return contains;
   }
 
   @override
