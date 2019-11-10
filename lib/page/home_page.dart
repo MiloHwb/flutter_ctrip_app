@@ -5,6 +5,7 @@ import 'package:flutter_ctrip_app/dao/home_dao.dart';
 import 'package:flutter_ctrip_app/model/home_model.dart';
 import 'package:flutter_ctrip_app/widget/grid_nav.dart';
 import 'package:flutter_ctrip_app/widget/local_nav.dart';
+import 'package:flutter_ctrip_app/widget/sub_nav.dart';
 import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -83,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                   _buildBanner(context),
                   LocalNav(localNavList: this.homeModel.localNavList),
                   GridNav(gridNavModel: this.homeModel.gridNav),
+                  SubNav(subNavList: this.homeModel.subNavList),
                 ],
               ),
               Opacity(
