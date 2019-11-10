@@ -128,38 +128,43 @@ class _WebViewState extends State<WebView> {
         height: MediaQuery.of(context).padding.top,
       );
     }
-    return Container(
-      child: FractionallySizedBox(
-        widthFactor: 1,
-        child: Stack(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                margin: EdgeInsets.only(left: 10),
-                child: Icon(
-                  Icons.close,
-                  color: backgroundColor,
-                  size: 26,
-                ),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  widget.title ?? '',
-                  style: TextStyle(
+    return SafeArea(
+      child: Container(
+        alignment: Alignment.center,
+        height: 45,
+        color: backgroundColor,
+        child: FractionallySizedBox(
+          widthFactor: 1,
+          child: Stack(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 10),
+                  child: Icon(
+                    Icons.close,
                     color: backButtonColor,
-                    fontSize: 20,
+                    size: 26,
                   ),
                 ),
               ),
-            )
-          ],
+              Positioned(
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Text(
+                    widget.title ?? '',
+                    style: TextStyle(
+                      color: backButtonColor,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

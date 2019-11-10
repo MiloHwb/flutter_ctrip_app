@@ -5,9 +5,10 @@ import 'package:flutter_ctrip_app/dao/home_dao.dart';
 import 'package:flutter_ctrip_app/model/home_model.dart';
 import 'package:flutter_ctrip_app/widget/grid_nav.dart';
 import 'package:flutter_ctrip_app/widget/local_nav.dart';
+import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-const APPBAR_SCROLL_OFFSET = 80;
+const APPBAR_SCROLL_OFFSET = 120;
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -19,12 +20,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List _imageUrls = [
-    'https://pics0.baidu.com/feed/c8ea15ce36d3d539f604d802b6864555352ab039.jpeg?token=ede95b32d9d44ce29748bafa0132eb64&s=17E546A6D6B6CFCE5C8BFD2F03007049',
-    'https://pics3.baidu.com/feed/3bf33a87e950352a180159e5df4257f7b3118b86.jpeg?token=b0c38ffc3d99e1eaa29ebbb25e32fc62&s=9B102CCD56779BDA543D26280300F05C',
-    'https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3090773533,2679197754&fm=173&app=25&f=JPEG?w=600&h=425&s=1AA87423DB63EECC4EDCD1DE0000A0B1',
-  ];
-
   final ScrollController _scrollController = ScrollController();
   double appBarAlpha = 0;
 
@@ -61,6 +56,7 @@ class _HomePageState extends State<HomePage> {
         resultString = json.encode(homeModel);
       });
     } catch (e) {
+      print(e);
       setState(() {
         resultString = e.toString();
       });
@@ -75,51 +71,69 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        ListView(
-          //去除ListView的padding，也可以使用MediaQuery.removePadding来实现
-          padding: EdgeInsets.zero,
-          //可以添加滚动监听，也可以使用NotificationListener实现，个人感觉controller更加方便
-          controller: _scrollController,
-          children: <Widget>[
-            Container(
-              height: 160,
-              child: Swiper(
-                itemCount: _imageUrls.length,
-                autoplay: true,
-                itemBuilder: (context, index) {
-                  return Image.network(
-                    _imageUrls[index],
-                    fit: BoxFit.fill,
-                  );
-                },
-                pagination: SwiperPagination(),
+    return this.homeModel != null
+        ? Stack(
+            children: <Widget>[
+              ListView(
+                //去除ListView的padding，也可以使用MediaQuery.removePadding来实现
+                padding: EdgeInsets.zero,
+                //可以添加滚动监听，也可以使用NotificationListener实现，个人感觉controller更加方便
+                controller: _scrollController,
+                children: <Widget>[
+                  _buildBanner(context),
+                  LocalNav(localNavList: this.homeModel.localNavList),
+                  GridNav(gridNavModel: this.homeModel.gridNav),
+                ],
               ),
+              Opacity(
+                opacity: appBarAlpha,
+                child: Container(
+                  height: 80,
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text('首页'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        : Center(
+            child: CircularProgressIndicator(),
+          );
+  }
+
+  /// 构建Banner
+  Container _buildBanner(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.width / 16 * 9,
+      child: Swiper(
+        itemCount: this.homeModel.bannerList.length,
+        autoplay: true,
+        itemBuilder: (context, index) {
+          var banner = this.homeModel.bannerList[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => WebView(
+                        url: banner.url,
+                        statusBarColor: null,
+                        title: null,
+                        hideAppBar: false,
+                        backForbid: true,
+                      )));
+            },
+            child: Image.network(
+              banner.icon,
+              fit: BoxFit.fill,
             ),
-            LocalNav(localNavList: this.homeModel == null ? [] : this.homeModel.localNavList),
-            Container(
-              height: 800,
-              child: ListTile(
-                title: Text(resultString),
-              ),
-            )
-          ],
-        ),
-        Opacity(
-          opacity: appBarAlpha,
-          child: Container(
-            height: 80,
-            decoration: BoxDecoration(color: Colors.white),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text('首页'),
-              ),
-            ),
-          ),
-        ),
-      ],
+          );
+        },
+        pagination: SwiperPagination(),
+      ),
     );
   }
 }
