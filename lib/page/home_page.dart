@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ctrip_app/dao/home_dao.dart';
 import 'package:flutter_ctrip_app/model/home_model.dart';
 import 'package:flutter_ctrip_app/widget/grid_nav.dart';
+import 'package:flutter_ctrip_app/widget/loading_container.dart';
 import 'package:flutter_ctrip_app/widget/local_nav.dart';
 import 'package:flutter_ctrip_app/widget/sale_box_nav.dart';
 import 'package:flutter_ctrip_app/widget/sub_nav.dart';
 import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 const APPBAR_SCROLL_OFFSET = 120;
 
@@ -25,8 +27,8 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   double appBarAlpha = 0;
 
-  String resultString = '';
   HomeModel homeModel;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -34,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     _scrollController.addListener(() {
       _onScroll(_scrollController.offset);
     });
-    loadData();
+    _handleRefresh();
   }
 
   void _onScroll(double offset) {
@@ -50,19 +52,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  loadData() async {
+  Future<Null> _handleRefresh() async {
     try {
       var homeModel = await HomeDao.fetch();
       setState(() {
         this.homeModel = homeModel;
-        resultString = json.encode(homeModel);
+        this.isLoading = false;
       });
     } catch (e) {
       print(e);
       setState(() {
-        resultString = e.toString();
+//        this.isLoading = false;
       });
+      Fluttertoast.showToast(
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
+    return null;
   }
 
   @override
@@ -73,49 +84,64 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return this.homeModel != null
-        ? Stack(
-            children: <Widget>[
-              ListView(
-                //去除ListView的padding，也可以使用MediaQuery.removePadding来实现
-                padding: EdgeInsets.zero,
-                //可以添加滚动监听，也可以使用NotificationListener实现，个人感觉controller更加方便
-                controller: _scrollController,
+    return LoadingContainer(
+        isLoading: this.isLoading,
+        child: this.isLoading
+            ? null
+            : Stack(
                 children: <Widget>[
-                  _buildBanner(context),
-                  LocalNav(localNavList: this.homeModel.localNavList),
-                  GridNav(gridNavModel: this.homeModel.gridNav),
-                  SubNav(subNavList: this.homeModel.subNavList),
-                  SaleBoxNav(salesBox: this.homeModel.salesBox),
-                  Center(
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 7),
-                      child: Text(
-                        '本APP由Milo完成',
-                        style: TextStyle(fontSize: 10, color: Colors.grey),
-                      ),
-                    ),
+                  RefreshIndicator(
+                    onRefresh: _handleRefresh,
+                    child: _buildListView(context),
                   ),
+                  _buildTitle(),
                 ],
-              ),
-              Opacity(
-                opacity: appBarAlpha,
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(color: Colors.white),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text('首页'),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        : Center(
-            child: CircularProgressIndicator(),
-          );
+              ));
+  }
+
+  ListView _buildListView(BuildContext context) {
+    return ListView(
+      //去除ListView的padding，也可以使用MediaQuery.removePadding来实现
+      padding: EdgeInsets.zero,
+      //可以添加滚动监听，也可以使用NotificationListener实现，个人感觉controller更加方便
+      controller: _scrollController,
+      children: <Widget>[
+        _buildBanner(context),
+        LocalNav(localNavList: this.homeModel.localNavList),
+        GridNav(gridNavModel: this.homeModel.gridNav),
+        SubNav(subNavList: this.homeModel.subNavList),
+        SaleBoxNav(salesBox: this.homeModel.salesBox),
+        _buildBottomHint(),
+      ],
+    );
+  }
+
+  Opacity _buildTitle() {
+    return Opacity(
+      opacity: appBarAlpha,
+      child: Container(
+        height: 80,
+        decoration: BoxDecoration(color: Colors.white),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Text('首页'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Center _buildBottomHint() {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 7),
+        child: Text(
+          '本APP由Milo完成',
+          style: TextStyle(fontSize: 10, color: Colors.grey),
+        ),
+      ),
+    );
   }
 
   /// 构建Banner
@@ -135,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                         url: banner.url,
                         statusBarColor: null,
                         title: null,
-                        hideAppBar: false,
+                        hideAppBar: true,
                         backForbid: true,
                       )));
             },
