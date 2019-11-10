@@ -5,6 +5,7 @@ import 'package:flutter_ctrip_app/dao/home_dao.dart';
 import 'package:flutter_ctrip_app/model/home_model.dart';
 import 'package:flutter_ctrip_app/widget/grid_nav.dart';
 import 'package:flutter_ctrip_app/widget/local_nav.dart';
+import 'package:flutter_ctrip_app/widget/sale_box_nav.dart';
 import 'package:flutter_ctrip_app/widget/sub_nav.dart';
 import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -85,6 +86,16 @@ class _HomePageState extends State<HomePage> {
                   LocalNav(localNavList: this.homeModel.localNavList),
                   GridNav(gridNavModel: this.homeModel.gridNav),
                   SubNav(subNavList: this.homeModel.subNavList),
+                  SaleBoxNav(salesBox: this.homeModel.salesBox),
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 7),
+                      child: Text(
+                        '本APP由Milo完成',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Opacity(
