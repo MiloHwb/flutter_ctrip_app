@@ -7,12 +7,14 @@ import 'package:flutter_ctrip_app/widget/grid_nav.dart';
 import 'package:flutter_ctrip_app/widget/loading_container.dart';
 import 'package:flutter_ctrip_app/widget/local_nav.dart';
 import 'package:flutter_ctrip_app/widget/sale_box_nav.dart';
+import 'package:flutter_ctrip_app/widget/search_bar.dart';
 import 'package:flutter_ctrip_app/widget/sub_nav.dart';
 import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 const APPBAR_SCROLL_OFFSET = 120;
+const SEARCH_BAR_DEFAULT_TEXT = '网红打卡地 景点 酒店 美食';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -116,19 +118,42 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Opacity _buildTitle() {
-    return Opacity(
+  Widget _buildTitle() {
+    return /*Opacity(
       opacity: appBarAlpha,
-      child: Container(
-        height: 80,
-        decoration: BoxDecoration(color: Colors.white),
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Text('首页'),
+      child: */
+        Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [Color(0x66000000), Colors.transparent],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter),
+          ),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            height: 80,
+            decoration: BoxDecoration(
+              color: Color.fromARGB((appBarAlpha * 255).toInt(), 255, 255, 255),
+            ),
+            child: SearchBar(
+              searchBarType: appBarAlpha > 0.2 ? SearchBarType.homeHighLight : SearchBarType.home,
+              enabled: false,
+              hideLeft: false,
+              inputBoxClick: _jump2Search,
+              speakClick: _jump2Speak,
+              defaultText: SEARCH_BAR_DEFAULT_TEXT,
+              leftButtonClick: () {},
+            ),
           ),
         ),
-      ),
+        Container(
+          height: appBarAlpha > 0.2 ? 0.5 : 0,
+          decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 0.5)]),
+        ),
+      ],
+//      ),
     );
   }
 
@@ -175,4 +200,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  _jump2Search() {}
+
+  _jump2Speak() {}
 }
