@@ -98,6 +98,7 @@ class _SearchPageState extends State<SearchPage> {
   void _onTextChange(String text) {
     keyword = text;
     if (text.length == 0) {
+      SearchDao.clear();
       setState(() {
         searchModel = null;
       });

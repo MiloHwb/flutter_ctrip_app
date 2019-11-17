@@ -35,4 +35,11 @@ class SearchDao {
       throw Exception('Search接口请求失败');
     }
   }
+
+  static clear(){
+    clientMaps.forEach((searchText, client) {
+      print(searchText + ' close');
+      client.close();
+    });
+  }
 }
