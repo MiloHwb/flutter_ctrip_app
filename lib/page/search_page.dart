@@ -76,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
               defaultText: widget.keyword,
               hint: widget.hint,
               leftButtonClick: () {},
-              rightButtonClick: () {
+              clearClick: () {
                 _onTextChange('');
               },
               onChanged: _onTextChange,
@@ -105,10 +105,12 @@ class _SearchPageState extends State<SearchPage> {
     }
     SearchDao.fetch(text).then((SearchModel searchModel) {
       setState(() {
+        print('searchText = ' + text);
         this.searchModel = searchModel;
-//        showText = json.encode(searchModel);
       });
     }).catchError((e) {
+      print(e.toString());
+
       //不能用Exception来接收参数，因为dart能抛出任意对象
       Fluttertoast.showToast(
           msg: e.toString(),

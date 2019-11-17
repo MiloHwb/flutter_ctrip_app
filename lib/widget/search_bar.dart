@@ -18,6 +18,7 @@ class SearchBar extends StatefulWidget {
   final VoidCallback rightButtonClick; //右边按钮回调
   final VoidCallback speakClick; //语音按钮点击回调
   final VoidCallback inputBoxClick; //搜索框点击
+  final VoidCallback clearClick; //清除按钮点击
   final ValueChanged<String> onChanged;
 
   const SearchBar(
@@ -31,7 +32,8 @@ class SearchBar extends StatefulWidget {
       this.rightButtonClick,
       this.speakClick,
       this.inputBoxClick,
-      this.onChanged})
+      this.onChanged,
+      this.clearClick})
       : super(key: key);
 
   @override
@@ -178,6 +180,7 @@ class _SearchBarState extends State<SearchBar> {
                   callback: () {
                     setState(() {
                       _controller.clear();
+                      widget.clearClick();
                     });
                   })
               : _wrapTap(
