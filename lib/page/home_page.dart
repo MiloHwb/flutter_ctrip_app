@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_ctrip_app/dao/home_dao.dart';
 import 'package:flutter_ctrip_app/model/home_model.dart';
+import 'package:flutter_ctrip_app/page/search_page.dart';
 import 'package:flutter_ctrip_app/widget/grid_nav.dart';
 import 'package:flutter_ctrip_app/widget/loading_container.dart';
 import 'package:flutter_ctrip_app/widget/local_nav.dart';
@@ -119,10 +120,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildTitle() {
-    return /*Opacity(
-      opacity: appBarAlpha,
-      child: */
-        Column(
+    return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
@@ -153,7 +151,6 @@ class _HomePageState extends State<HomePage> {
           decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 0.5)]),
         ),
       ],
-//      ),
     );
   }
 
@@ -201,7 +198,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _jump2Search() {}
+  _jump2Search() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return Material(
+        child: SearchPage(
+          hint: SEARCH_BAR_DEFAULT_TEXT,
+        ),
+      );
+    }));
+  }
 
   _jump2Speak() {}
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ctrip_app/dao/search_dao.dart';
 import 'package:flutter_ctrip_app/model/search_model.dart';
 import 'package:flutter_ctrip_app/widget/search_bar.dart';
+import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SearchPage extends StatefulWidget {
@@ -14,7 +15,8 @@ class SearchPage extends StatefulWidget {
   final String keyword;
   final String hint;
 
-  SearchPage({Key key, this.hideLeft, this.searchUrl, this.keyword, this.hint}) : super(key: key);
+  SearchPage({Key key, this.hideLeft = false, this.searchUrl, this.keyword, this.hint})
+      : super(key: key);
 
   @override
   _SearchPageState createState() {
@@ -68,14 +70,15 @@ class _SearchPageState extends State<SearchPage> {
                 end: Alignment.bottomCenter),
           ),
           child: Container(
-//            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
             height: 50,
             decoration: BoxDecoration(color: Colors.white),
             child: SearchBar(
               hideLeft: widget.hideLeft,
               defaultText: widget.keyword,
               hint: widget.hint,
-              leftButtonClick: () {},
+              leftButtonClick: () {
+                Navigator.of(context).pop();
+              },
               clearClick: () {
                 _onTextChange('');
               },
@@ -92,7 +95,41 @@ class _SearchPageState extends State<SearchPage> {
       return null;
     }
     var data = searchModel.data[index];
-    return Text(data.word);
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return WebView(
+                url: data.url,
+                title: '详情',
+              );
+            },
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        decoration:
+            BoxDecoration(border: Border(bottom: BorderSide(width: 0.3, color: Colors.grey))),
+        child: Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Container(
+                  width: 300,
+                  child: Text('${data.word} ${data.districtname ?? ''} ${data.zonename ?? ''}'),
+                ),
+                Container(
+                  width: 300,
+                  child: Text('${data.price ?? ''} ${data.type ?? ''}'),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   void _onTextChange(String text) {
