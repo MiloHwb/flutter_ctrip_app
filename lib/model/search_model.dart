@@ -35,7 +35,7 @@ class SearchItem {
 @JsonSerializable()
 class HeadModel {
   dynamic auth;
-  num errcode;
+  String errcode;
 
   HeadModel({this.auth, this.errcode});
 

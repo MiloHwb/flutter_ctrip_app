@@ -14,16 +14,12 @@ class SearchDao {
   static final Map<String, http.Client> clientMaps = {};
 
   static Future<SearchModel> fetch(String searchText) async {
-//    clients.map((client) {
-//      client.close();
-//    });
     clientMaps.forEach((searchText, client) {
       print(searchText + ' close');
       client.close();
     });
 
     var client = http.Client();
-//    clients.add(client);
     clientMaps[searchText]=client;
 
     Response response = await client.get(SEARCH_URL + searchText);

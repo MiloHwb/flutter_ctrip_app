@@ -50,7 +50,7 @@ Map<String, dynamic> _$SearchItemToJson(SearchItem instance) =>
 HeadModel _$HeadModelFromJson(Map<String, dynamic> json) {
   return HeadModel(
     auth: json['auth'],
-    errcode: json['errcode'] as num,
+    errcode: json['errcode'] as String,
   );
 }
 
