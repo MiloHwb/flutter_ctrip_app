@@ -9,6 +9,8 @@ import 'package:flutter_ctrip_app/widget/search_bar.dart';
 import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../r.dart';
+
 class SearchPage extends StatefulWidget {
   final bool hideLeft;
   final String searchUrl;
@@ -114,15 +116,24 @@ class _SearchPageState extends State<SearchPage> {
             BoxDecoration(border: Border(bottom: BorderSide(width: 0.3, color: Colors.grey))),
         child: Row(
           children: <Widget>[
+            Container(
+              margin: EdgeInsets.all(1),
+              child: Image(
+                height: 26,
+                width: 26,
+                image: AssetImage(_typeImage(data.type)),
+              ),
+            ),
             Column(
               children: <Widget>[
                 Container(
                   width: 300,
-                  child: Text('${data.word} ${data.districtname ?? ''} ${data.zonename ?? ''}'),
+                  child: _title(data),
                 ),
                 Container(
                   width: 300,
-                  child: Text('${data.price ?? ''} ${data.type ?? ''}'),
+                  margin: EdgeInsets.only(top: 5),
+                  child: subTitle(data),
                 ),
               ],
             )
@@ -130,6 +141,61 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
     );
+  }
+
+  Widget _title(SearchItem data) {
+    if (data == null) {
+      return null;
+    }
+    var spans = <TextSpan>[];
+    spans.addAll(_keywordTextSpans(data.word, keyword));
+    spans.add(TextSpan(
+      text: ' ' + (data.districtname ?? '') + ' ' + (data.zonename ?? ''),
+      style: TextStyle(fontSize: 16, color: Colors.grey),
+    ));
+
+    return RichText(text: TextSpan(children: spans));
+  }
+
+  Widget subTitle(SearchItem data) {
+    if (data == null) {
+      return null;
+    }
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: data.price ?? '',
+            style: TextStyle(fontSize: 16, color: Colors.orange),
+          ),
+          TextSpan(
+            text:' '+ (data.star ?? ''),
+            style: TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Iterable<TextSpan> _keywordTextSpans(String word, String keyword) {
+    var spans = <TextSpan>[];
+    if (word == null || word.length == 0) {
+      return spans;
+    }
+
+    var arr = word.split(keyword);
+    var normalTextStyle = TextStyle(fontSize: 16, color: Colors.black87);
+    var keywordTextStyle = TextStyle(fontSize: 16, color: Colors.orange);
+    for (var value in arr) {
+      if (value == null || value.length == 0) {
+        spans.add(TextSpan(text: keyword, style: keywordTextStyle));
+      } else {
+        spans.add(TextSpan(text: value, style: normalTextStyle));
+      }
+    }
+
+    return spans;
   }
 
   void _onTextChange(String text) {
@@ -150,14 +216,55 @@ class _SearchPageState extends State<SearchPage> {
       print(e.toString());
 
       //不能用Exception来接收参数，因为dart能抛出任意对象
-      Fluttertoast.showToast(
-          msg: e.toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIos: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+//      Fluttertoast.showToast(
+//          msg: e.toString(),
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.CENTER,
+//          timeInSecForIos: 1,
+//          backgroundColor: Colors.red,
+//          textColor: Colors.white,
+//          fontSize: 16.0);
     });
+  }
+
+  String _typeImage(String type) {
+    switch (type) {
+      case 'channelgroup':
+        return R.imagesTypeChannelgroup;
+      case 'channelgs':
+        return R.imagesTypeChannelgs;
+      case 'channelplane':
+        return R.imagesTypeChannelplane;
+      case 'channeltrain':
+        return R.imagesTypeChanneltrain;
+      case 'cruise':
+        return R.imagesTypeCruise;
+      case 'district':
+        return R.imagesTypeDistrict;
+      case 'food':
+        return R.imagesTypeFood;
+      case 'group':
+        return R.imagesTypeGroup;
+      case 'gs':
+        return R.imagesTypeGs;
+      case 'hotel':
+        return R.imagesTypeHotel;
+      case 'huodong':
+        return R.imagesTypeHuodong;
+      case 'plane':
+        return R.imagesTypePlane;
+      case 'shop':
+        return R.imagesTypeShop;
+      case 'sight':
+        return R.imagesTypeSight;
+      case 'ticket':
+        return R.imagesTypeTicket;
+      case 'train':
+        return R.imagesTypeTrain;
+      case 'travelgroup':
+        return R.imagesTypeTravelgroup;
+      default:
+        return R.imagesTypeTravelgroup;
+    }
   }
 }

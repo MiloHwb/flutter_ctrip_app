@@ -179,6 +179,7 @@ class _SearchBarState extends State<SearchBar> {
                   ),
                   callback: () {
                     setState(() {
+                      showClear = !showClear;
                       _controller.clear();
                       widget.clearClick();
                     });
