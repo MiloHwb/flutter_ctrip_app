@@ -27,15 +27,6 @@ class AsrPlugin(registrar: PluginRegistry.Registrar) : MethodChannel.MethodCallH
     private var activity: Activity? = registrar.activity()
     private var asrManager: AsrManager? = null
 
-    private val onAsrListener = object : AsrManager.OnAsrListener {
-        override fun onAsrReady() {
-            // TODO(onAsrReady)
-        }
-
-        override fun onAsrBegin() {
-            // TODO(onAsrBegin)
-        }
-    }
 
     private lateinit var resultStateful: ResultStateful
     override fun onMethodCall(methodCall: MethodCall, result: MethodChannel.Result) {
@@ -60,12 +51,27 @@ class AsrPlugin(registrar: PluginRegistry.Registrar) : MethodChannel.MethodCallH
             resultStateful.error("Ignored start, current activity is null", null, null)
         }
 
-        if (getAsrManager()!=null) {
-            getAsrManager()
+        if (getAsrManager() != null) {
+            getAsrManager()!!.start(if (methodCall.arguments is Map<*, *>) (methodCall.arguments as Map<String, Any>) else null)
+        } else {
+            Log.e(TAG, "Ignored start, current getAsrManager is null.")
+            resultStateful.error("Ignored start, current getAsrManager is null", null, null)
         }
     }
 
-    fun getAsrManager(): AsrManager? {
+    private fun stopRecord(methodCall: MethodCall, resultStateful: ResultStateful) {
+        if (getAsrManager() != null) {
+            getAsrManager()!!.stop()
+        }
+    }
+
+    private fun cancelRecord(methodCall: MethodCall, resultStateful: ResultStateful) {
+        if (getAsrManager() != null) {
+            getAsrManager()!!.cancel()
+        }
+    }
+
+    private fun getAsrManager(): AsrManager? {
         if (asrManager == null) {
             if (activity != null && !activity!!.isFinishing) {
                 asrManager = AsrManager(activity!!, onAsrListener)
@@ -73,4 +79,63 @@ class AsrPlugin(registrar: PluginRegistry.Registrar) : MethodChannel.MethodCallH
         }
         return asrManager
     }
+
+    private val onAsrListener = object : OnAsrListener {
+        override fun onAsrReady() {
+            // TODO(onAsrReady) 
+        }
+
+        override fun onAsrBegin() {
+            // TODO(onAsrBegin) 
+        }
+
+        override fun onAsrEnd() {
+            // TODO(onAsrEnd) 
+        }
+
+        override fun onAsrPartialResult(results: Array<String?>?, recogResult: RecogResult) {
+            // TODO(onAsrPartialResult) 
+        }
+
+        override fun onAsrOnlineNluResult(nluResult: String) {
+            // TODO(onAsrOnlineNluResult) 
+        }
+
+        override fun onAsrFinalResult(results: Array<String?>?, recogResult: RecogResult) {
+            // TODO(onAsrFinalResult) 
+        }
+
+        override fun onAsrFinish(recogResult: RecogResult) {
+            // TODO(onAsrFinish) 
+        }
+
+        override fun onAsrFinishError(errorCode: Int, subErrorCode: Int, descMessage: String?, recogResult: RecogResult) {
+            // TODO(onAsrFinishError) 
+        }
+
+        override fun onAsrLongFinish() {
+            // TODO(onAsrLongFinish) 
+        }
+
+        override fun onAsrVolume(volumePercent: Int, volume: Int) {
+            // TODO(onAsrVolume) 
+        }
+
+        override fun onAsrAudio(data: ByteArray, offset: Int, length: Int) {
+            // TODO(onAsrAudio) 
+        }
+
+        override fun onAsrExit() {
+            // TODO(onAsrExit) 
+        }
+
+        override fun onOfflineLoaded() {
+            // TODO(onOfflineLoaded) 
+        }
+
+        override fun onOfflineUnLoaded() {
+            // TODO(onOfflineUnLoaded) 
+        }
+    }
+
 }
