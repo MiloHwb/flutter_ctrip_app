@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ctrip_app/page/search_page.dart';
+import 'package:flutter_ctrip_app/plugin/asr_manager.dart';
 
 /*
  * @ 创建者       milo
@@ -16,7 +18,7 @@ class _SpeakPageState extends State<SpeakPage> with SingleTickerProviderStateMix
   Animation<double> animation;
   AnimationController controller;
 
-  final String speakTips = '长按说话';
+  String speakTips = '长按说话';
   String speakResult = '';
 
   @override
@@ -147,17 +149,45 @@ class _SpeakPageState extends State<SpeakPage> with SingleTickerProviderStateMix
 
   void _speakStart() {
     controller.forward();
+    setState(() {
+      speakTips = '- 识别中 -';
+    });
+    AsrManager.startRecord().then((text) {
+      if (text != null && text.length > 0) {
+        setState(() {
+          speakResult = text;
+        });
+        print('-------------------' + text);
 
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SearchPage(
+                      keyword: speakResult,
+                    )));
+      }
+    }).catchError((e) {
+      print(e.toString());
+    });
   }
 
   void _speakStop() {
     controller.reset();
     controller.stop();
+    setState(() {
+      speakTips = '长按说话';
+    });
+    AsrManager.stopRecord();
   }
 
   void _speakCancel() {
     controller.reset();
     controller.stop();
+    setState(() {
+      speakTips = '长按说话';
+    });
+    AsrManager.cancelRecord();
   }
 }
 
