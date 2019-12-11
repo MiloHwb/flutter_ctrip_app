@@ -17,15 +17,14 @@ class RecogEventAdapter(val listener: OnAsrListener) : EventListener {
     private val TAG = "RecogEventAdapter"
 
     // 基于DEMO集成3.1 开始回调事件
-    override fun onEvent(name: String, params: String, data: ByteArray, offset: Int, length: Int) {
+    override fun onEvent(name: String, params: String?, data: ByteArray?, offset: Int, length: Int) {
         val currentJson = params
         val logMessage = "name:$name; params:$params"
-
-        // logcat 中 搜索RecogEventAdapter，即可以看见下面一行的日志
-        Log.i(TAG, logMessage)
-        if (false) { // 可以调试，不需要后续逻辑
+        if (data == null || params == null) {
             return
         }
+        // logcat 中 搜索RecogEventAdapter，即可以看见下面一行的日志
+        Log.i(TAG, logMessage)
         if (name == SpeechConstant.CALLBACK_EVENT_ASR_LOADED) {
             listener.onOfflineLoaded()
         } else if (name == SpeechConstant.CALLBACK_EVENT_ASR_UNLOADED) {
