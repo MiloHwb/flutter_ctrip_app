@@ -10,6 +10,7 @@ import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../r.dart';
+import 'speak_page.dart';
 
 class SearchPage extends StatefulWidget {
   final bool hideLeft;
@@ -78,6 +79,7 @@ class _SearchPageState extends State<SearchPage> {
               hideLeft: widget.hideLeft,
               defaultText: widget.keyword,
               hint: widget.hint,
+              speakClick: _jump2Speak,
               leftButtonClick: () {
                 Navigator.of(context).pop();
               },
@@ -170,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
             style: TextStyle(fontSize: 16, color: Colors.orange),
           ),
           TextSpan(
-            text:' '+ (data.star ?? ''),
+            text: ' ' + (data.star ?? ''),
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
         ],
@@ -196,6 +198,12 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     return spans;
+  }
+
+  _jump2Speak() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return SpeakPage();
+    }));
   }
 
   void _onTextChange(String text) {

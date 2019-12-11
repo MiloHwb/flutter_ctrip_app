@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ctrip_app/dao/home_dao.dart';
 import 'package:flutter_ctrip_app/model/home_model.dart';
 import 'package:flutter_ctrip_app/page/search_page.dart';
+import 'package:flutter_ctrip_app/page/speak_page.dart';
 import 'package:flutter_ctrip_app/widget/grid_nav.dart';
 import 'package:flutter_ctrip_app/widget/loading_container.dart';
 import 'package:flutter_ctrip_app/widget/local_nav.dart';
@@ -209,7 +210,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   _jump2Speak() {
-
-
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return SpeakPage();
+    }));
   }
 }
