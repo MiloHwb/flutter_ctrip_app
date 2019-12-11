@@ -33,7 +33,9 @@ class AsrPlugin(registrar: PluginRegistry.Registrar) : MethodChannel.MethodCallH
 
     private lateinit var resultStateful: ResultStateful
     override fun onMethodCall(methodCall: MethodCall, result: MethodChannel.Result) {
-        initPermission()
+        if (!initPermission()) {
+            return
+        }
         when (methodCall.method) {
             "startRecord" -> {
                 resultStateful = ResultStateful.of(result)
@@ -89,9 +91,9 @@ class AsrPlugin(registrar: PluginRegistry.Registrar) : MethodChannel.MethodCallH
     /**
      * android 6.0 以上需要动态申请权限
      */
-    private fun initPermission() {
+    private fun initPermission(): Boolean {
         if (activity == null) {
-            return
+            return false
         }
         val permissions = arrayOf(Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.ACCESS_NETWORK_STATE,
@@ -109,6 +111,9 @@ class AsrPlugin(registrar: PluginRegistry.Registrar) : MethodChannel.MethodCallH
         val tmpList = arrayOfNulls<String>(toApplyList.size)
         if (toApplyList.isNotEmpty()) {
             ActivityCompat.requestPermissions(activity!!, toApplyList.toArray(tmpList), 123)
+            return false
+        } else {
+            return true
         }
     }
 

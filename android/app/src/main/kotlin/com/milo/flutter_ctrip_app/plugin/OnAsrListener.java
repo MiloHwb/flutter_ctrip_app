@@ -1,27 +1,30 @@
-package com.milo.flutter_ctrip_app.plugin
+package com.milo.flutter_ctrip_app.plugin;
+
+
 
 /**
  * 与SDK中回调参数的对应关系定义在RecogEventAdapter类中
  */
-interface OnAsrListener {
+
+public interface OnAsrListener {
 
     /**
      * CALLBACK_EVENT_ASR_READY
      * ASR_START 输入事件调用后，引擎准备完毕
      */
-    fun onAsrReady()
+    void onAsrReady();
 
     /**
      * CALLBACK_EVENT_ASR_BEGIN
      * onAsrReady后检查到用户开始说话
      */
-    fun onAsrBegin()
+    void onAsrBegin();
 
     /**
      * CALLBACK_EVENT_ASR_END
      * 检查到用户开始说话停止，或者ASR_STOP 输入事件调用后，
      */
-    fun onAsrEnd()
+    void onAsrEnd();
 
     /**
      * CALLBACK_EVENT_ASR_PARTIAL resultType=partial_result
@@ -30,7 +33,7 @@ interface OnAsrListener {
      * @param results     可能返回多个结果，请取第一个结果
      * @param recogResult 完整的结果
      */
-    fun onAsrPartialResult(results: Array<String?>?, recogResult: RecogResult)
+    void onAsrPartialResult(String[] results, RecogResult recogResult);
 
     /**
      * 语音的在线语义结果
@@ -38,23 +41,23 @@ interface OnAsrListener {
      * CALLBACK_EVENT_ASR_PARTIAL resultType=nlu_result
      * @param nluResult
      */
-    fun onAsrOnlineNluResult(nluResult: String)
+    void onAsrOnlineNluResult(String nluResult);
 
     /**
-     * 不开启长语音仅回调一次，长语音的每一句话都会回调一次
+     *  不开启长语音仅回调一次，长语音的每一句话都会回调一次
      * CALLBACK_EVENT_ASR_PARTIAL resultType=final_result
      * 最终的识别结果
      *
      * @param results     可能返回多个结果，请取第一个结果
      * @param recogResult 完整的结果
      */
-    fun onAsrFinalResult(results: Array<String?>?, recogResult: RecogResult)
+    void onAsrFinalResult(String[] results, RecogResult recogResult);
 
     /**
      * CALLBACK_EVENT_ASR_FINISH
      * @param recogResult 结束识别
      */
-    fun onAsrFinish(recogResult: RecogResult)
+    void onAsrFinish(RecogResult recogResult);
 
     /**
      * CALLBACK_EVENT_ASR_FINISH error!=0
@@ -64,13 +67,13 @@ interface OnAsrListener {
      * @param descMessage
      * @param recogResult
      */
-    fun onAsrFinishError(errorCode: Int, subErrorCode: Int, descMessage: String?,
-                         recogResult: RecogResult)
+    void onAsrFinishError(int errorCode, int subErrorCode, String descMessage,
+                          RecogResult recogResult);
 
     /**
      * 长语音识别结束
      */
-    fun onAsrLongFinish()
+    void onAsrLongFinish();
 
     /**
      * CALLBACK_EVENT_ASR_VOLUME
@@ -79,7 +82,7 @@ interface OnAsrListener {
      * @param volumePercent 音量的相对值，百分比，0-100
      * @param volume 音量绝对值
      */
-    fun onAsrVolume(volumePercent: Int, volume: Int)
+    void onAsrVolume(int volumePercent, int volume);
 
     /**
      * CALLBACK_EVENT_ASR_AUDIO
@@ -88,23 +91,23 @@ interface OnAsrListener {
      * @param offset
      * @param length
      */
-    fun onAsrAudio(data: ByteArray, offset: Int, length: Int)
+    void onAsrAudio(byte[] data, int offset, int length);
 
     /**
      * CALLBACK_EVENT_ASR_EXIT
      * 引擎完成整个识别，空闲中
      */
-    fun onAsrExit()
+    void onAsrExit();
 
     /**
      * CALLBACK_EVENT_ASR_LOADED
      * 离线命令词资源加载成功
      */
-    fun onOfflineLoaded()
+    void onOfflineLoaded();
 
     /**
      * CALLBACK_EVENT_ASR_UNLOADED
      * 离线命令词资源释放成功
      */
-    fun onOfflineUnLoaded()
+    void onOfflineUnLoaded();
 }

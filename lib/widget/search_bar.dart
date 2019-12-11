@@ -42,7 +42,20 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   final TextEditingController _controller = TextEditingController();
+
   bool showClear = false;
+
+  @override
+  void initState() {
+    if (widget.defaultText != null &&
+        widget.defaultText.length > 0 &&
+        widget.searchBarType == SearchBarType.normal) {
+      _controller.text = widget.defaultText;
+      onChanged(widget.defaultText);
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +177,7 @@ class _SearchBarState extends State<SearchBar> {
                     callback: widget.inputBoxClick,
                     widget: Container(
                       child: Text(
-                        widget.defaultText,
+                        widget.defaultText ?? null,
                         style: TextStyle(fontSize: 13, color: Colors.grey),
                       ),
                     ),
