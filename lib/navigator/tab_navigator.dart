@@ -33,41 +33,59 @@ class _TabNavigatorState extends State<TabNavigator> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xfff2f2f2),
-      body: PageView(
-        controller: _controller,
-        children: <Widget>[
-          HomePage(),
-          SearchPage(
-            hideLeft: true,
-          ),
-          TravelPage(),
-          MyPage(),
-        ],
-        physics: NeverScrollableScrollPhysics(), //不允许用户滑动
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          _controller.jumpToPage(index);
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          //首页按钮
-          buildBottomNavigationBarItem(Icons.home, 0, '首页'),
-          //搜索按钮
-          buildBottomNavigationBarItem(Icons.search, 1, '搜索'),
-          //旅拍
-          buildBottomNavigationBarItem(Icons.camera, 2, '旅拍'),
-          //我的
-          buildBottomNavigationBarItem(Icons.account_box, 3, '我的'),
-        ],
+    return WillPopScope(
+      onWillPop: _doubleExit,
+      child: Scaffold(
+        backgroundColor: Color(0xfff2f2f2),
+        body: PageView(
+          controller: _controller,
+          children: <Widget>[
+            HomePage(),
+            SearchPage(
+              hideLeft: true,
+            ),
+            TravelPage(),
+            MyPage(),
+          ],
+          physics: NeverScrollableScrollPhysics(), //不允许用户滑动
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+            _controller.jumpToPage(index);
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          items: [
+            //首页按钮
+            buildBottomNavigationBarItem(Icons.home, 0, '首页'),
+            //搜索按钮
+            buildBottomNavigationBarItem(Icons.search, 1, '搜索'),
+            //旅拍
+            buildBottomNavigationBarItem(Icons.camera, 2, '旅拍'),
+            //我的
+            buildBottomNavigationBarItem(Icons.account_box, 3, '我的'),
+          ],
+        ),
       ),
     );
+  }
+
+  var _lastClickTime = 0;
+
+  Future<bool> _doubleExit() {
+    int nowTime = new DateTime.now().microsecondsSinceEpoch;
+    if (_lastClickTime != 0 && nowTime - _lastClickTime > 1500) {
+      return new Future.value(true);
+    } else {
+      _lastClickTime = new DateTime.now().microsecondsSinceEpoch;
+      new Future.delayed(const Duration(milliseconds: 1500), () {
+        _lastClickTime = 0;
+      });
+      return new Future.value(false);
+    }
   }
 
   BottomNavigationBarItem buildBottomNavigationBarItem(IconData iconData, int index, String title) {
