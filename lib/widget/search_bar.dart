@@ -167,6 +167,7 @@ class _SearchBarState extends State<SearchBar> {
                       fontWeight: FontWeight.w300,
                     ),
                     decoration: InputDecoration(
+                      isDense: true,//解决contentPadding 上下为0时不生效的bug
                       contentPadding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                       border: InputBorder.none,
                       hintText: widget.hint ?? '',
