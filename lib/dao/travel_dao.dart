@@ -22,15 +22,18 @@ Map params = {
 class TravelDao {
   static Future<TravelModel> fetch(
       String url, String groupChannelCode, int pageIndex, int pageSize) async {
+
     params['groupChannelCode'] = groupChannelCode;
     Map paramMap = params['pagePara'];
     paramMap['pageIndex'] = pageIndex;
-    paramMap['pageSize'] = pageIndex;
+    paramMap['pageSize'] = pageSize;
     Response response = await http.post(url, body: jsonEncode(params));
 
     if (response.statusCode == 200) {
       var utf8decoder = Utf8Decoder(); //修复中文乱码
-      var result = json.decode(utf8decoder.convert(response.bodyBytes));
+      var resultString = utf8decoder.convert(response.bodyBytes);
+      var result = json.decode(resultString);
+      print(resultString);
       return TravelModel.fromJson(result);
     } else {
       throw Exception('Travel接口请求失败');

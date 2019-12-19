@@ -200,13 +200,13 @@ Image _$ImageFromJson(Map<String, dynamic> json) {
   return Image(
     isWaterMarked: json['isWaterMarked'] as bool,
     imageId: json['imageId'] as int,
-    width: json['width'] as int,
+    width: json['width'] as num,
     mediaType: json['mediaType'] as int,
-    lon: json['lon'] as int,
+    lon: json['lon'] as double,
     originalUrl: json['originalUrl'] as String,
     dynamicUrl: json['dynamicUrl'] as String,
-    lat: json['lat'] as int,
-    height: json['height'] as int,
+    lat: json['lat'] as double,
+    height: json['height'] as num,
   );
 }
 

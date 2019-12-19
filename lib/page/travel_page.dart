@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ctrip_app/dao/travel_tab_dao.dart';
 import 'package:flutter_ctrip_app/model/travel_model.dart';
 import 'package:flutter_ctrip_app/model/travel_tab_model.dart';
+import 'package:flutter_ctrip_app/page/travel_tab_page.dart';
 
 class TravelPage extends StatefulWidget {
   TravelPage({Key key}) : super(key: key);
@@ -16,22 +17,14 @@ class TravelPage extends StatefulWidget {
 
 class _TravelPageState extends State<TravelPage> with TickerProviderStateMixin {
   TabController _controller;
-  List<TravelTab> tabs = [
-//    TravelTab(labelName: '1', groupChannelCode: ''),
-//    TravelTab(labelName: '2', groupChannelCode: ''),
-//    TravelTab(labelName: '3', groupChannelCode: ''),
-//    TravelTab(labelName: '4', groupChannelCode: ''),
-//    TravelTab(labelName: '5', groupChannelCode: ''),
-//    TravelTab(labelName: '6', groupChannelCode: ''),
-  ];
+  List<TravelTab> tabs = [];
   TravelTabModel travelTabModel;
 
   @override
   void initState() {
     _controller = TabController(length: tabs.length, vsync: this);
     TravelTabDao.fetch().then((TravelTabModel model) {
-      print('model.tabs.length = ${model.tabs.length}');
-        _controller = TabController(length: model.tabs.length, vsync: this);
+      _controller = TabController(length: model.tabs.length, vsync: this);
       setState(() {
         this.tabs = model.tabs;
         this.travelTabModel = model;
@@ -60,16 +53,27 @@ class _TravelPageState extends State<TravelPage> with TickerProviderStateMixin {
                 controller: _controller,
                 isScrollable: true,
                 labelColor: Colors.black,
-                labelPadding: EdgeInsets.fromLTRB(20, 0, 10, 5),
+                labelPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 indicator: UnderlineTabIndicator(
                   borderSide: BorderSide(
                     color: Color(0xff2fcfbb),
                     width: 3,
                   ),
-                  insets: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  insets: EdgeInsets.fromLTRB(0, 0, 0, 5),
                 ),
                 tabs: this.tabs.map((TravelTab tab) {
                   return Tab(text: tab.labelName);
+                }).toList(),
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _controller,
+                children: this.tabs.map((TravelTab tab) {
+                  return TravelTabPage(
+                    travelUrl: travelTabModel.url,
+                    groupChannelCode: tab.groupChannelCode,
+                  );
                 }).toList(),
               ),
             ),

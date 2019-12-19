@@ -170,13 +170,13 @@ class CoverImage {
 class Image {
   bool isWaterMarked;
   int imageId;
-  int width;
+  num width;
   int mediaType;
-  int lon;
+  double lon;
   String originalUrl;
   String dynamicUrl;
-  int lat;
-  int height;
+  double lat;
+  num height;
 
   Image(
       {this.isWaterMarked,
