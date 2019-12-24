@@ -48,7 +48,7 @@ class _WebViewState extends State<WebView> {
       switch (state.type) {
         case WebViewState.shouldStart:
           if (_isToMain(state.url)) {
-            if (widget.backForbid && !isExit) {
+            if (!widget.backForbid && !isExit) {
               Navigator.of(context).pop();
               isExit = true;
             } else {

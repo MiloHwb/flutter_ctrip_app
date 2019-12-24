@@ -28,11 +28,23 @@ class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveCl
   List<TravelItem> travelItems = [];
   int pageIndex = 1;
   bool isLoading = true;
+  ScrollController _controller = ScrollController();
 
   @override
   void initState() {
     _loadData();
     super.initState();
+    _controller.addListener(() {
+      if (_controller.position.pixels >= _controller.position.maxScrollExtent) {
+        _loadData(loadMore: true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,6 +56,7 @@ class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveCl
         child: RefreshIndicator(
           onRefresh: _handleRefresh,
           child: StaggeredGridView.countBuilder(
+            controller: _controller,
             crossAxisCount: 2,
             itemCount: travelItems?.length ?? 0,
             itemBuilder: (BuildContext context, int index) =>
@@ -55,7 +68,12 @@ class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveCl
     );
   }
 
-  void _loadData() {
+  void _loadData({loadMore = false}) {
+    if (loadMore) {
+      pageIndex++;
+    } else {
+      pageIndex = 1;
+    }
     TravelDao.fetch(widget.travelUrl ?? TRAVEL_URL, widget.groupChannelCode, pageIndex, PAGE_SIZE)
         .then((TravelModel model) {
       setState(() {
