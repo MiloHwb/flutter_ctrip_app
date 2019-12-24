@@ -44,7 +44,7 @@ class Article {
   bool hasVideo;
   String publishTime;
   String articleTitle;
-  List<Image> images;
+  List<ImageEntity> images;
   int level;
   String poiName;
   Author author;
@@ -167,7 +167,7 @@ class CoverImage {
 }
 
 @JsonSerializable()
-class Image {
+class ImageEntity {
   bool isWaterMarked;
   int imageId;
   num width;
@@ -178,7 +178,7 @@ class Image {
   double lat;
   num height;
 
-  Image(
+  ImageEntity(
       {this.isWaterMarked,
       this.imageId,
       this.width,
@@ -189,7 +189,7 @@ class Image {
       this.lat,
       this.height});
 
-  factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
+  factory ImageEntity.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageToJson(this);
 }

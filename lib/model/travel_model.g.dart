@@ -62,7 +62,7 @@ Article _$ArticleFromJson(Map<String, dynamic> json) {
     articleTitle: json['articleTitle'] as String,
     images: (json['images'] as List)
         ?.map(
-            (e) => e == null ? null : Image.fromJson(e as Map<String, dynamic>))
+            (e) => e == null ? null : ImageEntity.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     level: json['level'] as int,
     poiName: json['poiName'] as String,
@@ -196,8 +196,8 @@ Map<String, dynamic> _$CoverImageToJson(CoverImage instance) =>
       'dynamicUrl': instance.dynamicUrl,
     };
 
-Image _$ImageFromJson(Map<String, dynamic> json) {
-  return Image(
+ImageEntity _$ImageFromJson(Map<String, dynamic> json) {
+  return ImageEntity(
     isWaterMarked: json['isWaterMarked'] as bool,
     imageId: json['imageId'] as int,
     width: json['width'] as num,
@@ -210,7 +210,7 @@ Image _$ImageFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ImageToJson(Image instance) => <String, dynamic>{
+Map<String, dynamic> _$ImageToJson(ImageEntity instance) => <String, dynamic>{
       'isWaterMarked': instance.isWaterMarked,
       'imageId': instance.imageId,
       'width': instance.width,

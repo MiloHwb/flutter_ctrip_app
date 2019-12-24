@@ -13,7 +13,7 @@ class TabNavigator extends StatefulWidget {
   }
 }
 
-class _TabNavigatorState extends State<TabNavigator> {
+class _TabNavigatorState extends State<TabNavigator> with AutomaticKeepAliveClientMixin{
   PageController _controller;
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
@@ -104,4 +104,7 @@ class _TabNavigatorState extends State<TabNavigator> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
