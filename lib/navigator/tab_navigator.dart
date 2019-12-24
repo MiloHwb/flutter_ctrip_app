@@ -33,6 +33,7 @@ class _TabNavigatorState extends State<TabNavigator> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return WillPopScope(
       onWillPop: _doubleExit,
       child: Scaffold(

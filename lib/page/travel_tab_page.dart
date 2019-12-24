@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ctrip_app/dao/travel_dao.dart';
 import 'package:flutter_ctrip_app/model/travel_model.dart';
+import 'package:flutter_ctrip_app/widget/loading_container.dart';
 import 'package:flutter_ctrip_app/widget/webview.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -23,9 +24,10 @@ class TravelTabPage extends StatefulWidget {
   _TravelTabPageState createState() => _TravelTabPageState();
 }
 
-class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveClientMixin{
+class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveClientMixin {
   List<TravelItem> travelItems = [];
   int pageIndex = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -35,13 +37,20 @@ class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-      body: StaggeredGridView.countBuilder(
-        crossAxisCount: 2,
-        itemCount: travelItems?.length ?? 0,
-        itemBuilder: (BuildContext context, int index) =>
-            _TravelItem(travelItem: travelItems[index], index: index),
-        staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+      body: LoadingContainer(
+        isLoading: isLoading,
+        child: RefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: StaggeredGridView.countBuilder(
+            crossAxisCount: 2,
+            itemCount: travelItems?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) =>
+                _TravelItem(travelItem: travelItems[index], index: index),
+            staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+          ),
+        ),
       ),
     );
   }
@@ -50,6 +59,7 @@ class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveCl
     TravelDao.fetch(widget.travelUrl ?? TRAVEL_URL, widget.groupChannelCode, pageIndex, PAGE_SIZE)
         .then((TravelModel model) {
       setState(() {
+        isLoading = false;
         List<TravelItem> items = _filterItems(model.resultList);
         if (travelItems != null) {
           travelItems.addAll(items);
@@ -58,6 +68,9 @@ class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveCl
         }
       });
     }).catchError((e) {
+      setState(() {
+        isLoading = false;
+      });
       debugPrint(e.toString());
     });
   }
@@ -79,6 +92,12 @@ class _TravelTabPageState extends State<TravelTabPage> with AutomaticKeepAliveCl
 
   @override
   bool get wantKeepAlive => true;
+
+  Future<Null> _handleRefresh() {
+    pageIndex = 1;
+    _loadData();
+    return Future.value(null);
+  }
 }
 
 class _TravelItem extends StatelessWidget {
